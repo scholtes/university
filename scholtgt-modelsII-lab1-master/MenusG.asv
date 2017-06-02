@@ -1,0 +1,65 @@
+% Authors: Thorin Rothenbuhler, Daniel Vonderhaar, Garrett Scholtes
+% Date:    2015-01-21
+% 
+% This script is for Models II, Lab 1.  The script allows analysis of
+% demographic data for various countries.
+
+clear;
+
+load('Demographic_Data');
+
+% Main loop
+while 1
+    
+    % Ask which data to see
+    % This is just 
+    data_choice = menu('Choose a dataset to analyze', 'Age Group Populations', 'Population by Year', 'Literacy Rate and Income', 'Education by Gender');
+    if data_choice == 0
+        fprintf('Exiting... thank you');
+        exit(0)
+    end
+    number_countries = [2 1 3 1];
+    number_countries = number_countries(data_choice);
+    countries = {1:number_countries};
+
+    menu('Go to MATLAB console to input countries', 'Okay');
+
+    fprintf('Input %d countrie(s) below (one on each line)\n', number_countries);
+    for i = 1:number_countries
+        countries(i) = cellstr(input(sprintf('Country (%d/%d): ',i,number_countries),'s'));
+    end
+    
+    % This selects which data to analyze.  Each case was written by a
+    % different member of the team.
+    switch(data_choice)
+        case 1
+            % Age Group p
+            fprintf('Age Group Pops');
+        case 2
+            % Population Trends - Daniel Vonderhaar
+            CountryName = char(countries(1));
+            L = find(strcmpi(Demographic_Data.Country, CountryName));
+            
+            plot(Demographic_Data.Year(L),Demographic_Data.Population(L),'bo');
+            xlabel ('Year');
+            ylabel ('Population');
+            title (sprintf('Population of %s', char(CountryName)));
+            legend ('Population','Trend in Population');
+
+            coeffs = polyfit(Demographic_Data.Year(L),Demographic_Data.Population(L), 1);
+            %Define the range where we want the line
+            xFit = 1990:2012; 
+            %Define the range where we want the line
+            yFit = polyval(coeffs, xFit);
+
+            %Plot the fitted line over the specified range.
+            hold on; %Don't blow away prior plot
+            plot(xFit, yFit,'r-');
+            legend ('Population','Trend in Population')
+        case 3
+            fprintf('Lit rate income');
+        case 4
+            fprintf('Educ gender');
+    end
+
+end
